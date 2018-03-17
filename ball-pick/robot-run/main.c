@@ -15,17 +15,19 @@ void turn(int direction)
 {
     clear_motor_position_counter(0);
     clear_motor_position_counter(1);
-    mtp(direction,1000,1300*pow(-1,direction));
-    mtp(pow(0.5,direction-1)-1,1000,1300*pow(-1,direction));
-    msleep(1300);
+    mtp(direction,1000,2150*pow(-1,direction));
+    mtp(pow(0.5,direction-1)-1,1000,2150*pow(-1,direction));
+    msleep(2200);
     //turn(n);
-    //left: n = 0
-    //right: n = 1
+    //left: n = 1
+    //right: n = 0
     //1300ms
 }
 
 
 int main()
 {
-    
+    forward(1500,2000);
+    turn(1);
+    forward(15000);
 }
