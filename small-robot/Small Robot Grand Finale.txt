@@ -1,0 +1,156 @@
+#include <kipr/botball.h>
+#include <math.h>
+//#0 left +
+//#1 right -
+//analog(0)>=3500 black
+//low : low servo position  ÷±€∑≈œ¬
+//high : high servo position
+
+void followline(int d){
+
+    clear_motor_position_counter(0);
+
+    clear_motor_position_counter(1);
+
+    while (get_motor_position_counter(0)<d)
+
+    {
+
+        if (analog(0)>=2500)
+
+        {
+
+            mav(0,1000);
+
+            mav(1,-800);
+
+            msleep(10);
+
+        }
+
+        if (analog(0)<=2500)
+
+        {
+
+            mav(0,800);
+
+            mav(1,-1000);
+
+            msleep(10);
+
+        }
+
+    }
+
+}
+void forward(int velocity,int distance)
+{
+    clear_motor_position_counter(0);
+    clear_motor_position_counter(1);
+    mtp(0,velocity,distance);
+    mtp(1,velocity,-distance);
+    msleep(abs((float)distance/((float)velocity/1000)));
+    //forward(velocity,distance as tik);
+    //1cm = 100tik
+}
+
+void turn(int direction)
+{
+    clear_motor_position_counter(0);
+    clear_motor_position_counter(1);
+    mtp(direction,1000,1250*pow(-1,direction));
+    mtp(pow(0.5,direction-1)-1,1000,1250*pow(-1,direction));
+    msleep(2200);
+
+
+    
+
+}
+
+void turna(int direction)
+{
+    clear_motor_position_counter(0);
+    clear_motor_position_counter(1);
+    if (direction == 0){
+        mtp(1,1000,2350);
+    }
+    else{
+        mtp(0,1000,2350);
+    }
+    msleep(2400);
+
+    
+    
+}
+
+void arm(int stat)
+{
+    if (stat == 0) {
+        set_servo_position(0,400);
+    }
+    else{
+        set_servo_position(0,800);
+    }
+    enable_servo(0);
+    msleep(500);
+    disable_servo(0);
+
+
+}
+void blackring(){
+
+    mav(2,-70);
+
+    msleep(5000);
+
+    mav(0,700);
+
+    mav(1,-700);
+
+    msleep(6000);
+
+    freeze(0);
+
+    freeze(2);
+
+    mav(2,-500);
+
+    msleep(1000);
+
+    mav(0,700);
+
+    mav(1,-700);
+
+    msleep(2000);
+
+}
+
+int main()
+{
+
+    mav(2,500);
+
+    msleep(700);
+
+    freeze(2);
+
+    enable_servos();
+
+    arm(1);
+
+    turna(1);
+
+    //go to box
+
+    forward(1000,1500);
+
+    followline(14900);
+
+    turn(0);
+
+    turn(0);
+
+    blackring();
+
+return 0;
+ }
