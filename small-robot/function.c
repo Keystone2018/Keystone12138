@@ -3,7 +3,7 @@
 //#0 left +
 //#1 right -
 //analog(0)>=3500 black
-//low : low servo position ÊÖ±Û·ÅÏÂ
+//low : low servo position æ‰‹è‡‚æ”¾ä¸‹
 //high : high servo position
 void forward(int velocity,int distance)
 {
@@ -48,14 +48,14 @@ void turna(int direction)
 void arm(int stat)
 {
     if n=0{
-        set_servo_position(0,high);//ÊÖ±ÛÌ§Æğ
+        set_servo_position(0,high);//æ‰‹è‡‚æŠ¬èµ·
     }
     else{
-        set_servo_position(0,low);//ÊÖ±ÛÂäÏÂ
+        set_servo_position(0,low);//æ‰‹è‡‚è½ä¸‹
     }
-    enable_servo(0); //¶æ»úºÅ´ı¶¨
+    enable_servo(0); //èˆµæœºå·å¾…å®š
     msleep(500);
     disable_servo(0);
     //arm(n);
-    //Ì§Æğ : 0
+    //æŠ¬èµ· : 0
 }
