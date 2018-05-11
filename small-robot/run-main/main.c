@@ -3,7 +3,7 @@
 //#0 left +
 //#1 right -
 //analog(0)>=3500 black
-//low : low servo position 手臂放下
+//low : low servo position f
 //high : high servo position
 
 void followline(int d)
@@ -26,6 +26,28 @@ void followline(int d)
         }
     }
 }
+
+void followlineReverse(int d)
+{
+    clear_motor_position_counter(0);
+    clear_motor_position_counter(1);
+    while (get_motor_position_counter(0)<d)
+    {
+        if (analog(0)<=3500)
+        {
+            mav(0,800);
+            mav(1,-1000);
+            msleep(10);
+        }
+        if (analog(0)>=3500)
+        {
+            mav(0,1000);
+            mav(1,-800);
+            msleep(10);
+        }
+    }
+}
+
 
 void forward(int velocity,int distance)
 {
@@ -77,38 +99,60 @@ void arm(int stat)
 
 void blackring()
 {
-    mav(2,70);
-    msleep(5000);
-    mav(0,700);
-    mav(1,-700);
-    msleep(6000);
+    freeze(0);
+    freeze(1);
+    //lift the first ring
+    clear_motor_position_counter(0);
+    mav(2,76);
+    msleep(4300);
+    while(get_motor_position_counter(0)<4600){
+        mav(0,900);
+        mav(1,-900);
+    }
+    ao();
+    //get the arm off
+    mav(2,-100);
+    msleep(3900);
+    freeze(2);
+    //go to the second arm
+    mav(0,800);
+    mav(1,300);
+    msleep(500);
+    followlineReverse(10800);
+    freeze(0);
+    freeze(1);
+    //arrive at the second arm
+    mav(0,-500);
+    mav(1,500);
+    msleep(6800);
     freeze(0);
     freeze(2);
-    mav(2,500);
-    msleep(1000);
-    mav(0,700);
-    mav(1,-700);
-    msleep(2000);
+    //take it down
+    mav(0,-50);
+    mav(1,50);
+    mav(2,250);
+    msleep(6000);
 }
 
 int main()
 {
     disable_servos();
     arm(1);
-    mav(2,-1000);
-    msleep(1100);
-    freeze(2);
-    enable_servos();
-    arm(1);
+    mav(2,-500);
     turna(0,1);
-    //go to box
+    freeze(2);
+    //go to the disc
     forward(1000,1500);
-    followline(16800);
+    followline(10700);
+    mav(0,1000);
+    mav(1,-1000);
+    msleep(5000);
     turn(1);
     mav(2,-90);
-    msleep(1200);
+    msleep(1000);
     freeze(2);
     turn(1);
+    //Arrive at the disc
     blackring();
     return 0;
- }
+}
