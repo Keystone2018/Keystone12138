@@ -117,13 +117,12 @@ void blackring()    //Arrive at the disc
     //lift the first ring
     clear_motor_position_counter(0);
     //arm:+580,go:2900
-    clear_motor_position_counter(1);
+    clear_motor_position_counter(0);
     clear_motor_position_counter(2);
-    mav(0,1500);
-    mav(1,-1500);
-    mav(2,-400);
     while(get_motor_position_counter(0)<2900){
-        msleep(100);
+        mav(0,1500);
+        mav(1,-1500);
+        mav(2,-400);
     }
     ao();
     
@@ -168,6 +167,23 @@ int main()
     */
     enable_servos();
 
+    /*arm(0);
+    mav(2,-500);
+    clear_motor_position_counter(0);
+    mav(0,1000);
+    msleep(2400);
+    freeze(2);
+    //go to the disc
+    forward(1000,1500);
+    followline(10200);
+    forward(1000,4700);
+    turn(1);
+    mav(2,-90);
+    msleep(1000);
+    freeze(2);
+    forward(100,-100);
+    turn(1);*/
+
     //start
     turna(0);
     forward(1500,2200);
@@ -175,14 +191,34 @@ int main()
     msleep(1200);
     freeze(2);
     turn(0);
-    forward(1000,-700);
+    forward(1000,-750);
     turn(1);
     
     //Arrive at the disc
-    ao();
-    msleep(100);
     blackring();
-
+    
+    /*
+    //go back
+    mav(2,-500);
+    msleep(800);
+    freeze(2);
+    turn(0);
+    msleep(500);
+    turn(0);
+    mav(2,-1000);
+    msleep(500);
+    freeze(2);
+    followline(8625);
+    turn(1);
+    forward(1500,4600);
+    turn(0);
+    forward(1500,7700);
+    forward(1500,-10);
+    arm(1);//get balls
+    forward(1000,-2600);//back out
+    clear_motor_position_counter(1);
+    mav(1,-1000);
+    msleep(2440);   */
     turn(0);
     forward(1000,100);
     while(analog(0)<=3500)

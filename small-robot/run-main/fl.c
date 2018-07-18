@@ -1,14 +1,11 @@
 #include <kipr/botball.h>
 #include <math.h>
-//#0 right + open
-//#1 left - close
+//#0 left +
+//#1 right -
 //analog(0)>=3500 black
 //low : low servo position f
 //high : high servo position
-//disc arm: + => front
-//disc arm: - => back
 
-//starter pos: 1.5cm from parellel black line
 void followline(int d)
 {
     clear_motor_position_counter(0);
@@ -17,15 +14,15 @@ void followline(int d)
     {
         if (analog(0)>=3500)
         {
-            mav(0,1000);
-            mav(1,-1500);
-            msleep(8);
+            mav(0,800);
+            mav(1,-1000);
+            msleep(10);
         }
         if (analog(0)<=3500)
         {
-            mav(0,1500);
-            mav(1,-1000);
-            msleep(8);
+            mav(0,1000);
+            mav(1,-800);
+            msleep(10);
         }
     }
 }
@@ -38,15 +35,15 @@ void followlineReverse(int d)
     {
         if (analog(0)<=3500)
         {
-            mav(0,1000);
-            mav(1,-1500);
-            msleep(8);
+            mav(0,800);
+            mav(1,-1000);
+            msleep(10);
         }
         if (analog(0)>=3500)
         {
-            mav(0,1500);
-            mav(1,-1000);
-            msleep(8);
+            mav(0,1200);
+            mav(1,-600);
+            msleep(10);
         }
     }
 }
@@ -75,128 +72,90 @@ void turn(int direction)
     //left: n = 1
     //1300ms
 }
-void turna(int direction)
+
+void turna(int motor,int direction)
 {
     clear_motor_position_counter(0);
     clear_motor_position_counter(1);
-    /*
-    mtp(pow(2,direction)-1,1000,2300*pow(-1,direction));
-    msleep(2400);
-    //turn(n);
-    //left: n = 0
-    //right: n = 1
-    //1300ms
-    */
-    if (direction == 0){
-        mtp(1,1000,-1900);
-    }
-    else{
-        mtp(0,1000,1900);
-    }
+    mtp(motor,1000,1900*direction);
     msleep(2000);
+    //turn(m,n);
+    //m : motor #
+    //n : direction
 }
 
 void arm(int stat)
 {
     if (stat == 0) {
-        set_servo_position(1,0);
+        set_servo_position(0,400);
     }
     else{
-        set_servo_position(1,975);
+        set_servo_position(0,800);
     }
     enable_servo(0);
     msleep(500);
     disable_servo(0);
 }
 
-void blackring()    //Arrive at the disc
+void blackring()
 {
     freeze(0);
     freeze(1);
-    
     //lift the first ring
     clear_motor_position_counter(0);
-    //arm:+580,go:2900
-    clear_motor_position_counter(1);
-    clear_motor_position_counter(2);
-    mav(0,1500);
-    mav(1,-1500);
-    mav(2,-400);
-    while(get_motor_position_counter(0)<2900){
+    mav(2,76);
+    msleep(4300);
+    mav(0,900);
+    mav(1,-900);
+    while(get_motor_position_counter(0)<4300){ //4600
         msleep(100);
     }
     ao();
-    
-    //take the arm off
-    forward(1500,1500);
-    mav(2,1000);
-    msleep(360);
+    //get the arm off
+    mav(2,-70);
+    msleep(5500);
     freeze(2);
-    
     //go to the second arm
-    mav(0,700);
-    mav(1,400);
-    msleep(600);
-    followlineReverse(10000);
+    mav(0,800);
+    mav(1,300);
+    msleep(500);
+    followlineReverse(8000);
     freeze(0);
     freeze(1);
-    
     //arrive at the second arm
-    forward(1500,-2800);
+    /*
+    mav(0,-500);
+    mav(1,500);
+    msleep(7800);*/
+    forward(500,-1560);
     freeze(0);
     freeze(2);
-    
     //take it down
-    mav(2,-1000);
-    msleep(150);
-    mav(2,-550);
-    mav(0,-550);
-    mav(1,500);
-    msleep(1000);
+    mav(0,-50);
+    mav(1,50);
+    mav(2,250);
+    msleep(6000);
 }
 
-/*
-void blueballs(){
-    
-}
-*/
 int main()
 {
-    //preperation
-    /*wait_for_light(1);
-    shut_down_in(120);
-    */
-    enable_servos();
-
-    //start
-    turna(0);
-    forward(1500,2200);
-    mav(2,1000);
-    msleep(1200);
-    freeze(2);
-    turn(0);
-    forward(1000,-700);
-    turn(1);
-    
-    //Arrive at the disc
-    ao();
+    disable_servos();
+    mav(2,-600);
+    turna(0,1);
     msleep(100);
+    freeze(2);
+    //go to the disc
+    forward(1000,600); //1500
+    followline(8700); //10700
+    mav(0,1000);
+    mav(1,-1000);
+    msleep(4000);
+    turn(1);
+    mav(2,-90);
+    msleep(1000);
+    freeze(2);
+    turn(1);
+    //Arrive at the disc
     blackring();
-
-    turn(0);
-    forward(1000,100);
-    while(analog(0)<=3500)
-    {
-        mav(0,1000);
-        mav(1,-1000);
-    }
-    forward(1000,50);
-    while(analog(0)<=3500)
-    {
-        mav(0,1500);
-        mav(1,-1500);
-    }
-
-   
     return 0;
 }

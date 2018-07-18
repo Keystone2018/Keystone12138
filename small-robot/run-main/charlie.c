@@ -177,10 +177,10 @@ int main()
     turn(0);
     forward(1000,-700);
     turn(1);
+    forward(100,-50);
     
     //Arrive at the disc
     ao();
-    msleep(100);
     blackring();
 
     turn(0);
