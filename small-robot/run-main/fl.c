@@ -107,7 +107,7 @@ void blackring()
     msleep(4300);
     mav(0,900);
     mav(1,-900);
-    while(get_motor_position_counter(0)<4300){ //4600
+    while(get_motor_position_counter(0)<4600){ //4600
         msleep(100);
     }
     ao();
@@ -120,14 +120,14 @@ void blackring()
     mav(1,300);
     msleep(500);
     followlineReverse(8000);
-    freeze(0);
-    freeze(1);
+    ao();
+    msleep(2000);
     //arrive at the second arm
     /*
     mav(0,-500);
     mav(1,500);
     msleep(7800);*/
-    forward(500,-1560);
+    forward(500,-1700);
     freeze(0);
     freeze(2);
     //take it down
@@ -146,11 +146,12 @@ int main()
     freeze(2);
     //go to the disc
     forward(1000,600); //1500
-    followline(8700); //10700
+    followline(8500); //10700
     mav(0,1000);
     mav(1,-1000);
     msleep(4000);
     turn(1);
+    forward(200,-200);
     mav(2,-90);
     msleep(1000);
     freeze(2);
