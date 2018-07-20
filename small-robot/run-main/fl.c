@@ -3,7 +3,7 @@
 //#0 left +
 //#1 right -
 //analog(0)>=3500 black
-//low : low servo position f
+//low : low servo position
 //high : high servo position
 
 void followline(int d)
@@ -35,8 +35,8 @@ void followlineReverse(int d)
     {
         if (analog(0)<=3500)
         {
-            mav(0,800);
-            mav(1,-1000);
+            mav(0,600);
+            mav(1,-1200);
             msleep(10);
         }
         if (analog(0)>=3500)
@@ -47,7 +47,6 @@ void followlineReverse(int d)
         }
     }
 }
-
 
 void forward(int velocity,int distance)
 {
@@ -103,7 +102,7 @@ void blackring()
     freeze(1);
     //lift the first ring
     clear_motor_position_counter(0);
-    mav(2,76);
+    mav(2,80);
     msleep(4300);
     mav(0,900);
     mav(1,-900);
@@ -119,7 +118,14 @@ void blackring()
     mav(0,800);
     mav(1,300);
     msleep(500);
-    followlineReverse(8000);
+    ao();
+    mav(2,-250);
+    msleep(1000);
+    freeze(2);
+    followlineReverse(5000);
+    forward(1000,1300);
+    mav(2,180);
+    msleep(800);
     ao();
     msleep(2000);
     //arrive at the second arm
@@ -127,15 +133,15 @@ void blackring()
     mav(0,-500);
     mav(1,500);
     msleep(7800);*/
-    forward(500,-1700);
-    freeze(0);
+    forward(800,-1600);
+    ao();
     freeze(2);
     //take it down
-    mav(0,-50);
-    mav(1,50);
     mav(2,250);
-    msleep(6000);
+    msleep(5000);
+    ao();
 }
+
 
 int main()
 {
@@ -145,11 +151,12 @@ int main()
     msleep(100);
     freeze(2);
     //go to the disc
-    forward(1000,600); //1500
-    followline(8500); //10700
+    forward(1000,600);
+    followline(8500);
     mav(0,1000);
     mav(1,-1000);
     msleep(4000);
+    ao();
     turn(1);
     forward(200,-200);
     mav(2,-90);
@@ -158,5 +165,38 @@ int main()
     turn(1);
     //Arrive at the disc
     blackring();
+    mav(2,200);
+    msleep(1000);
+    mav(2,-200);
+    msleep(3000);
+    ao();
+
+    /*
+    This is the 203th attempt to optimize this program.
+    It took a total of 28 hours.
+    Please be sure to maintain this comment.
+    */
+    
+    //Yellow square
+    //Move to public zone
+    turn(0);
+    turn(0);
+    clear_motor_position_counter(2);
+    mtp(2,-1350);
+    followline(6000);
+    turn(1);
+    mav(0,1000);
+    mav(1,-1000);
+    msleep(1000);
+    while(analog(0)<=3500){
+        msleep(100);
+    }
+    msleep(300);
+    ao();
+    turn(1);
+    followlineReverse(1000);
+    forward(800,1000);
+    turn(0);
+    followlineReverse(2000);
     return 0;
 }
