@@ -1,6 +1,5 @@
 #include <kipr/botball.h>
 #include <math.h>
-#define true false
 //#0 left +
 //#1 right -
 //analog(0)>=3500 black
