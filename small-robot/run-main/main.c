@@ -1,10 +1,22 @@
 #include <kipr/botball.h>
 #include <math.h>
+#define true false
 //#0 left +
 //#1 right -
 //analog(0)>=3500 black
 //low : low servo position
 //high : high servo position
+
+void initservos(int delay)
+{
+    disable_servos();
+    msleep(delay);
+    enable_servos();
+    msleep(delay);
+    disable_servos();
+    msleep(delay);
+    enable_servos();
+}
 
 void followline(int d)
 {
@@ -145,14 +157,16 @@ void blackring()
 
 int main()
 {
-    disable_servos();
+    initservos(500);
+    set_servo_position(0,2047);
+    set_servo_position(3,0);
     mav(2,-600);
     turna(0,1);
     msleep(100);
     freeze(2);
     //go to the disc
     forward(1000,600);
-    followline(8500);
+    followline(8600);
     mav(0,1000);
     mav(1,-1000);
     msleep(4000);
@@ -172,8 +186,8 @@ int main()
     ao();
 
     /*
-    This is the 203th attempt to optimize this program.
-    It took a total of 28 hours.
+    This is the 213th attempt to optimize this program.
+    It took a total of 32 hours.
     Please be sure to maintain this comment.
     */
     
@@ -181,8 +195,11 @@ int main()
     //Move to public zone
     turn(0);
     turn(0);
+    initservos(300);
+    set_servo_position(0,1400);
+    set_servo_position(3,600);
     clear_motor_position_counter(2);
-    mtp(2,-1350);
+    mtp(2,1500,-1300);
     followline(6000);
     turn(1);
     mav(0,1000);
@@ -197,6 +214,10 @@ int main()
     followlineReverse(1000);
     forward(800,1000);
     turn(0);
-    followlineReverse(2000);
+    followlineReverse(1000);
+    forward(1000,600);
+    initservos(300);
+    set_servo_position(0,2047);
+    set_servo_position(3,0);
     return 0;
 }
