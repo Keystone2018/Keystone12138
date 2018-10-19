@@ -3,7 +3,7 @@
 //#0 left +
 //#1 right -
 //analog(0)>=3500 black
-//low : low servo position 手臂放下
+//low : low servo position
 //high : high servo position
 void forward(int velocity,int distance)
 {
@@ -43,16 +43,16 @@ void turna(int motor,int direction)
 void arm(int stat)
 {
     if (stat==0) {
-        set_servo_position(0,400);//手臂抬起
+        set_servo_position(0,400);
     }
     else{
-        set_servo_position(0,800);//手臂落下
+        set_servo_position(0,800);
     }
-    enable_servo(0); //舵机号待定
+    enable_servo(0);
     msleep(500);
     disable_servo(0);
     //arm(n);
-    //抬起 : 0
+
 }
 
 int main()
@@ -61,7 +61,7 @@ int main()
     int cstat=0
     clear_motor_position_counter(0);
     clear_motor_position_counter(1);
-    while (get_motor_position_counter(0)<16500&&cstat<3)
+    while (get_motor_position_counter(0)<16500 && count<3)
     {
         if (analog(0)>=3500)
         {
@@ -75,12 +75,12 @@ int main()
             mav(1,-800);
             msleep(10);
         }
-        if (analog(1)<=n &&cstat=0)
+        if (analog(1)<=sd && cstat=0)
         {
             count=count+1
             cstat=1
         }
-        if (analog(1)>=n &&cstat=1)
+        if (analog(1)>=sd && cstat=1)
         {
             cstat=0
         }

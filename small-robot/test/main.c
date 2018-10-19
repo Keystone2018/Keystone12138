@@ -67,9 +67,9 @@ void turn(int direction)
 {
     clear_motor_position_counter(0);
     clear_motor_position_counter(1);
-    mtp(direction,1000,920*pow(-1,direction));
-    mtp(pow(0.5,direction-1)-1,1000,920*pow(-1,direction));
-    msleep(1000);
+    mtp(direction,1000,1050*pow(-1,direction));
+    mtp(pow(0.5,direction-1)-1,1000,1050*pow(-1,direction));
+    msleep(2200);
     //turn(n);
     //right: n = 0
     //left: n = 1
@@ -79,23 +79,13 @@ void turna(int direction)
 {
     clear_motor_position_counter(0);
     clear_motor_position_counter(1);
-    /*
-    mtp(pow(2,direction)-1,1000,2300*pow(-1,direction));
-    msleep(2400);
+    mtp(pow(2,direction)-1,1000,2150*pow(-1,direction));
+    msleep(4400);
     //turn(n);
     //left: n = 0
     //right: n = 1
     //1300ms
-    */
-    if (direction == 0){
-        mtp(1,1000,-1900);
-    }
-    else{
-        mtp(0,1000,1900);
-    }
-    msleep(2000);
 }
-
 void arm(int stat)
 {
     if (stat == 0) {
@@ -117,13 +107,12 @@ void blackring()    //Arrive at the disc
     //lift the first ring
     clear_motor_position_counter(0);
     //arm:+580,go:2900
-    clear_motor_position_counter(1);
+    clear_motor_position_counter(0);
     clear_motor_position_counter(2);
-    mav(0,1500);
-    mav(1,-1500);
-    mav(2,-400);
     while(get_motor_position_counter(0)<2900){
-        msleep(100);
+        mav(0,1500);
+        mav(1,-1500);
+        mav(2,-400);
     }
     ao();
     
@@ -162,41 +151,7 @@ void blueballs(){
 */
 int main()
 {
-    //preperation
-    /*wait_for_light(1);
-    shut_down_in(120);
-    */
-    enable_servos();
-
-    //start
     turna(0);
-    forward(1500,2200);
-    mav(2,1000);
-    msleep(1200);
-    freeze(2);
-    turn(0);
-    forward(1000,-700);
-    turn(1);
-    forward(100,-50);
-    
-    //Arrive at the disc
-    ao();
-    blackring();
-
-    turn(0);
-    forward(1000,100);
-    while(analog(0)<=3500)
-    {
-        mav(0,1000);
-        mav(1,-1000);
-    }
-    forward(1000,50);
-    while(analog(0)<=3500)
-    {
-        mav(0,1500);
-        mav(1,-1500);
-    }
-
-   
+    turna(0);
     return 0;
 }

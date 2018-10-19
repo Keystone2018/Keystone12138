@@ -134,7 +134,7 @@ void blackring()
     mav(2,180);
     msleep(800);
     ao();
-    msleep(200);
+    msleep(2000);
     //arrive at the second arm
     /*
     mav(0,-500);
@@ -187,11 +187,6 @@ int main()
     
     //Yellow square
     //Move to public zone
-    turn(0);
-    turn(0);
-    clear_motor_position_counter(2);
-    mtp(2,1500,-1300);
-    followline(10000);  //Go back to the start zone
-    forward(1500,2000);
+    ao();
     return 0;
 }

@@ -13,11 +13,11 @@ void initservos(int delay)
     enable_servos();
 }
 
-void followline(int distance)
+void followline(int d)
 {
     clear_motor_position_counter(0);
     clear_motor_position_counter(1);
-    while (get_motor_position_counter(0)<distance)
+    while (get_motor_position_counter(0)<d)
     {
         if (analog(0)>=3500)
         {
@@ -34,11 +34,11 @@ void followline(int distance)
     }
 }
 
-void followlineReverse(int distance)
+void followlineReverse(int d)
 {
     clear_motor_position_counter(0);
     clear_motor_position_counter(1);
-    while (get_motor_position_counter(0)<distance)
+    while (get_motor_position_counter(0)<d)
     {
         if (analog(0)<=3500)
         {
@@ -59,16 +59,19 @@ void forward(int velocity,int distance)
 {
     clear_motor_position_counter(0);
     clear_motor_position_counter(1);
-    mtp(0,velocity,distance);
-    mtp(1,velocity,-distance);
-    msleep(abs((float)distance/((float)velocity/1000)));
-    //forward(velocity,distance as tik);
-    //1cm = 100tik
+    int i=50;
+    while(i<abs((float)distance/((float)velocity/1000))){
+        mav(0,velocity*(distance/abs(distance)));
+        mav(1,-velocity*(distance/abs(distance)));
+        msleep(50);
+        i+=50;
+    }
+    freeze(0);
+    freeze(1);
 }
 
 void turn(int direction)
 {
-    clear_motor_position_counter(0);
     clear_motor_position_counter(1);
     mtp(direction,1000,920*pow(-1,direction));
     mtp(pow(0.5,direction-1)-1,1000,920*pow(-1,direction));
@@ -129,18 +132,18 @@ void blackring()
     mav(2,-250);
     msleep(1000);
     freeze(2);
-    followlineReverse(5200);
+    followlineReverse(5000);
     forward(1000,1300);
     mav(2,180);
     msleep(800);
     ao();
-    msleep(200);
+    msleep(2000);
     //arrive at the second arm
     /*
     mav(0,-500);
     mav(1,500);
     msleep(7800);*/
-    forward(800,-1800);
+    forward(800,-1600);
     ao();
     freeze(2);
     //take it down
@@ -154,13 +157,16 @@ int main()
 {
     wait_for_light(1);
     shut_down_in(120);
+    initservos(500);
+    set_servo_position(0,2047);
+    set_servo_position(1,0); 
     mav(2,-600);
     turna(0,1);
     msleep(100);
     freeze(2);
     //go to the disc
     forward(1000,600);
-    followline(8550);
+    followline(8700);
     mav(0,1000);
     mav(1,-1000);
     msleep(4000);
@@ -189,9 +195,34 @@ int main()
     //Move to public zone
     turn(0);
     turn(0);
+    //initservos(300);
     clear_motor_position_counter(2);
     mtp(2,1500,-1300);
-    followline(10000);  //Go back to the start zone
-    forward(1500,2000);
+    followline(6000);
+    turn(1);
+    mav(0,1000);
+    mav(1,-1000);
+    msleep(1000);
+    while(analog(0)<=3500){
+        msleep(100);
+    }
+    ao();
+    forward(8000,300);
+    set_servo_position(0,1400);
+    set_servo_position(1,600);
+    msleep(1000);
+    turn(1);
+    followlineReverse(1000);
+    forward(800,1000);
+    turn(0);
+    followlineReverse(1000);
+    forward(1000,600);
+    //initservos(300);
+    set_servo_position(0,1800);
+    set_servo_position(1,200);
+    forward(1500,-1000);
+    turn(0);
+    turn(0);
+    forward(1500,2500);
     return 0;
 }
